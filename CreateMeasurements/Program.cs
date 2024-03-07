@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 
 //Number of enteries
-var size = 100000;// 1e9;
+var size = 1e6; //1e5; //1e9;
 
 //All the weather stations
 #region Weather stations
