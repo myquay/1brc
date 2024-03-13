@@ -3,23 +3,27 @@ using System.Diagnostics;
 
 var size = "1e6"; //Options: 1e5, 1e6, 1e9
 
-string[] enabled = ["01"];
+string[] enabled = ["02"];
 
 var solvers = new Dictionary<string, IAttempt>
 {
-    { "01", new Attempt01(new BrcOptions($"C:\\\\1brc\\measurements_{size}.txt", false)) }
+    { "01", new Attempt01(new BrcOptions($"C:\\\\1brc\\measurements_{size}.txt", false)) },
+    { "02", new Attempt02(new BrcOptions($"C:\\\\1brc\\measurements_{size}.txt", false)) }
 };
 
-var sw = Stopwatch.StartNew();
+var timings = new Dictionary<string, long>();
 
 foreach (var kvp in solvers)
 {
     if (enabled.Contains(kvp.Key))
     {
+        var sw = Stopwatch.StartNew();
         await kvp.Value.Solve();
-        Console.WriteLine($"\n\nAttempt {kvp.Key} total: {sw.ElapsedMilliseconds}ms\n");
+        sw.Stop();
+        timings.Add(kvp.Key, sw.ElapsedMilliseconds);
     }
 }
 
-sw.Stop();
-Console.WriteLine($"\n\nTotal: {sw.ElapsedMilliseconds}ms\n");
+Console.WriteLine("\n\n");
+foreach (var kvp in timings)
+    Console.WriteLine($"Attempt {kvp.Key} total: {kvp.Value}ms");

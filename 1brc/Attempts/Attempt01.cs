@@ -22,10 +22,7 @@ namespace brc.Attempts
 
         public async Task Solve()
         {
-            Console.WriteLine("Solving using Attempt 01");
             var file = new FileInfo(Options.File);
-            Console.WriteLine($"File: {file.FullName}");
-
             using var reader = new StreamReader(file.FullName);
 
             var data = new Dictionary<string, Measurement>();
