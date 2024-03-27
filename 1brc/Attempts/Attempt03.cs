@@ -1,4 +1,5 @@
-﻿using System;
+﻿using brc.Attempts.Lib03;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace brc.Attempts
 {
-    internal class Attempt02(BrcOptions Options) : IAttempt
+    internal class Attempt03(BrcOptions Options) : IAttempt
     {
 
         /// <summary>
@@ -16,9 +17,9 @@ namespace brc.Attempts
         /// </summary>
         private struct Measurement
         {
-            public double Sum { get; set; }
-            public double Min { get; set; }
-            public double Max { get; set; }
+            public int Sum { get; set; }
+            public int Min { get; set; }
+            public int Max { get; set; }
             public int Count { get; set; }
         }
 
@@ -39,17 +40,17 @@ namespace brc.Attempts
 
             while (reader.Read(buffer) is int numberRead)
             {
-                if(numberRead == 0)
+                if (numberRead == 0)
                     break;
 
-                if(numberRead < buffer.Length) //If bytes read is maller than buffer, truncate the buffer
+                if (numberRead < buffer.Length) //If bytes read is maller than buffer, truncate the buffer
                     buffer = buffer[..numberRead];
 
                 if (buffer[bufferOffsetStart] == 239)
-                    bufferOffsetStart+=3; //SKIP BOM
+                    bufferOffsetStart += 3; //SKIP BOM
 
                 //Iterate through all the lines
-                while(buffer.Slice(bufferOffsetStart).IndexOf(newLine) is int newLineIndex and > -1)
+                while (buffer.Slice(bufferOffsetStart).IndexOf(newLine) is int newLineIndex and > -1)
                 {
                     var line = buffer.Slice(bufferOffsetStart, newLineIndex);
                     bufferOffsetStart += newLineIndex + 1; //Skip the newline
@@ -59,7 +60,7 @@ namespace brc.Attempts
                     var name = Encoding.UTF8.GetString(line[..seperatorIndex]);
                     var measurement = data.TryGetValue(name, out var m) ? m : new Measurement();
 
-                    var value = double.Parse(line[(seperatorIndex + 1)..]);
+                    var value = FastParser.TempAsInt(line[(seperatorIndex + 1)..]);
 
                     measurement.Sum += value;
                     measurement.Min = measurement.Min < value ? measurement.Min : value;
@@ -91,7 +92,7 @@ namespace brc.Attempts
             {
                 Console.Write($"{measurements[i].Station}={measurements[i].Min}/{measurements[i].Mean:#.0}/{measurements[i].Max}, ");
             }
-            Console.Write($"{measurements[^1].Station}={measurements[^1].Min}/{measurements[^1].Mean:#.0}/{measurements[^1].Max}}}");
+            Console.Write($"{measurements[^1].Station}={measurements[^1].Min / 10f}/{measurements[^1].Mean / 10f:#.0}/{measurements[^1].Max / 10f}}}");
 
 
             return Task.CompletedTask;
