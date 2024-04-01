@@ -30,10 +30,11 @@ namespace brc.Attempts.Lib04
         public static long GenerateKey(ReadOnlySpan<byte> chunk)
         {
             //Take the first 7 characters + length
-            long key = chunk.Length << 64;
+            int shift = 56;
+            long key = chunk.Length << shift;
 
-            for (int i = 0, l = chunk.Length; i < l && i < 7; i++)
-                key += chunk[i] << (56 - i * 8);
+            for (int i = 0; i < chunk.Length && (shift-=8)>=0; i++)
+                key += chunk[i] << shift;
 
             return key;
         }
