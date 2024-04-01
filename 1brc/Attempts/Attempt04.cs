@@ -1,7 +1,8 @@
-﻿using v3 = brc.Attempts.Lib03;
+﻿using v4 = brc.Attempts.Lib04;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace brc.Attempts
 {
-    internal class Attempt03(BrcOptions Options) : IAttempt
+    internal class Attempt04(BrcOptions Options) : IAttempt
     {
 
         /// <summary>
@@ -17,6 +18,7 @@ namespace brc.Attempts
         /// </summary>
         private struct Measurement
         {
+            public string Name { get; set; }
             public int Sum { get; set; }
             public int Min { get; set; }
             public int Max { get; set; }
@@ -32,7 +34,10 @@ namespace brc.Attempts
             var file = new FileInfo(Options.File);
 
             Span<byte> buffer = new byte[1024 * 512];
-            var data = new Dictionary<string, Measurement>();
+            var data = new Dictionary<long, Measurement>();
+
+
+            var debugHash = new Dictionary<string, long>();
 
             using var reader = file.OpenRead();
 
@@ -50,24 +55,25 @@ namespace brc.Attempts
                     bufferOffsetStart += 3; //SKIP BOM
 
                 //Iterate through all the lines
-                while (buffer.Slice(bufferOffsetStart).IndexOf(newLine) is int newLineIndex and > -1)
+                while (buffer[bufferOffsetStart..].IndexOf(newLine) is int newLineIndex and > -1)
                 {
                     var line = buffer.Slice(bufferOffsetStart, newLineIndex);
                     bufferOffsetStart += newLineIndex + 1; //Skip the newline
 
                     var seperatorIndex = line.IndexOf(seperator);
 
-                    var name = Encoding.UTF8.GetString(line[..seperatorIndex]);
-                    var measurement = data.TryGetValue(name, out var m) ? m : new Measurement();
+                    var dictKey = v4.Utilities.GenerateKey(line[..seperatorIndex]);
 
-                    var value = v3.FastParser.TempAsInt(line[(seperatorIndex + 1)..]);
+                    ref var measurement = ref CollectionsMarshal.GetValueRefOrAddDefault(data, dictKey, out bool exists);
+                    if(!exists)
+                        measurement.Name = Encoding.UTF8.GetString(line[..seperatorIndex]);
+
+                    var value = v4.Utilities.FastParseTemp(line[(seperatorIndex + 1)..]);
 
                     measurement.Sum += value;
                     measurement.Min = measurement.Min < value ? measurement.Min : value;
                     measurement.Max = measurement.Max > value ? measurement.Max : value;
                     measurement.Count++;
-
-                    data[name] = measurement;
                 }
 
                 //Backtrack to the start of the line
@@ -78,7 +84,7 @@ namespace brc.Attempts
             //Calculate and sort the measurements
             var measurements = data.Select(d => new
             {
-                Station = d.Key,
+                Station = d.Value.Name,
                 d.Value.Min,
                 d.Value.Max,
                 Mean = d.Value.Sum / d.Value.Count
