@@ -1,16 +1,16 @@
 ﻿using brc.Attempts;
 using System.Diagnostics;
 
-var size = "1e6"; //Options: 1e5, 1e6, 1e9
-
-string[] enabled = ["04"];
+string[] enabled = ["05", "06"];
 
 var solvers = new Dictionary<string, IAttempt>
 {
-    { "01", new Attempt01(new BrcOptions($"C:\\\\1brc\\measurements_{size}.txt", false)) },
-    { "02", new Attempt02(new BrcOptions($"C:\\\\1brc\\measurements_{size}.txt", false)) },
-    { "03", new Attempt03(new BrcOptions($"C:\\\\1brc\\measurements_{size}.txt", false)) },
-    { "04", new Attempt04(new BrcOptions($"C:\\\\1brc\\measurements_{size}.txt", false)) } 
+    { "01", new Attempt01(new BrcOptions("measurements.txt", false)) },
+    { "02", new Attempt02(new BrcOptions("measurements.txt", false)) },
+    { "03", new Attempt03(new BrcOptions("measurements.txt", false)) },
+    { "04", new Attempt04(new BrcOptions("measurements.txt", false)) },
+    { "05", new Attempt05(new BrcOptions("measurements.txt", true)) },
+    { "06", new Attempt06(new BrcOptions("measurements.txt", true)) }
 };
 
 var timings = new Dictionary<string, long>();

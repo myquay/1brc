@@ -396,3 +396,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+measurements.txt
+*.nettrace
+*.nettrace.etlx
+*.txt
+.tools/*
+**/.DS_Store
