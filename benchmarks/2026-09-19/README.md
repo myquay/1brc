@@ -103,3 +103,7 @@ Move NameLength after Count. Prior **5,602 ms**, reordered **5,721 ms**; user CP
 ### 19 — branchless sign-position update (rejected)
 
 Replace conditional position increment with addition of a conditional 0/1. Prior **5,074 ms**, branchless **5,346 ms** (+5.4%); user CPU **17.12 s → 18.70 s** (+9.3%). Reverted. Removing a branch is not automatically faster; this changes the dependency chain in the hot loop. Full suite passes. Benchmark/verification drivers extended to support a native executable for the final AOT experiment.
+
+### 20 — .NET 11 NativeAOT (not adopted)
+
+Isolated publish of the same candidate with `dotnet publish -c Release -r osx-arm64 -p:PublishAot=true --disable-build-servers -o /tmp/1brc-aot/publish`, exact .NET 11 RC1 packages downloaded into /tmp. The emitted native executable passes all fixtures and full-file comparison. JIT median **5,396 ms**, native **5,413 ms**; user CPU **17.01 s → 17.15 s**. No throughput benefit. Publish returned exit code 1 because xcodebuild requires full Xcode (this machine has Command Line Tools), despite producing the runnable binary; this is an exploratory artifact, not a clean supported publish. Retain normal JIT deployment; no Xcode installation or repository AOT configuration added.
