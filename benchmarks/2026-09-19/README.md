@@ -83,3 +83,7 @@ Three fresh-process runs per setting via DOTNET_PROCESSOR_COUNT (also affects ru
 ### 14 — explicit Vector128 separator search (rejected)
 
 Test the .NET 11 ARM64 comparison-mask/first-match improvements with a 16-byte prefix comparison, retaining SWAR fallback. Prior **4,398 ms**, SIMD **4,720 ms** (+7.3%). Median user CPU rose from **17.79 s to 22.27 s**; additional extraction/hash branches outweighed scanning more bytes. Reverted; portable scalar SWAR remains faster here. Full suite passes. Wall-time drift was large, but CPU time also clearly worsened.
+
+### 15 — AggressiveOptimization parser (rejected)
+
+Skip tier-0 compilation/dynamic PGO for ParseCompleteLines. Prior **4,383 ms**, candidate **4,631 ms** (+5.7%); median user CPU **17.71 s → 17.96 s**. No demonstrated benefit; revert attribute and retain default .NET 11 tiering/PGO. Full suite passes.

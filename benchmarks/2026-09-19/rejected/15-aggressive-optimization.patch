@@ -1,0 +1,12 @@
+diff --git a/1brc/Attempts/Attempt07.cs b/1brc/Attempts/Attempt07.cs
+index 88ed0ab..547a96d 100644
+--- a/1brc/Attempts/Attempt07.cs
++++ b/1brc/Attempts/Attempt07.cs
+@@ -242,6 +242,7 @@ namespace brc.Attempts
+             return data;
+         }
+ 
++        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+         private static int ParseCompleteLines(ReadOnlySpan<byte> buffer, MeasurementTable data)
+         {
+             var offset = 0;
