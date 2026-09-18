@@ -63,3 +63,7 @@ SWAR (eight bytes per scalar word) detects `;` and hashes each loaded word in th
 ### 09 — separate table hit and insertion paths
 
 Check existing key/name first; move growth/allocation to cold Insert and inline the smaller hit loop. Prior **3,601 ms**, candidate **3,580 ms** (3,565–3,647), neutral within noise (0.6%). Retain for simpler hot path and to avoid per-row growth checks; do not count as established speedup. Full suite, deliberate collisions and full-file comparison pass.
+
+### 10 — disable redundant FileStream buffering
+
+The application already owns a 4 MiB buffer. Set FileStream buffer size to 1, avoiding its separate large buffer for short reads. Prior **3,551 ms**, candidate **3,540 ms** (3,538–3,550): neutral throughput, retained for lower buffering/allocation overhead. Full suite passes. A separate `dd if=measurements.txt of=/dev/null bs=4m` read took **3.101 s**, suggesting a substantial I/O floor. This is a contextual sequential-read measurement, not a strict lower bound or controlled cold-cache test. Extended benchmark driver with optional `--file` and `:07@N` processor-count overrides for subsequent experiments.

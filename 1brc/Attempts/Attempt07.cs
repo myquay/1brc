@@ -211,7 +211,7 @@ namespace brc.Attempts
             var carry = 0;
             var position = start;
 
-            using var reader = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, FileOptions.SequentialScan);
+            using var reader = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, 1, FileOptions.SequentialScan);
             reader.Position = start;
 
             while (position < end)
