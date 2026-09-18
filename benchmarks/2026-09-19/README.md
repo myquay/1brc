@@ -75,3 +75,7 @@ Reduce buffers from 4 MiB to 256 KiB to improve locality and reduce live memory 
 ### 12 — 64 KiB buffers (rejected)
 
 Prior 256 KiB **4,134 ms**, 64 KiB **5,210 ms** (5,142–5,740), **26% slower**. Reverted; increased syscall frequency outweighs locality benefits. Both controls and candidate slowed in this series, reinforcing paired comparisons over comparisons with distant runs. Hardware confirmed: **Apple M3 Pro, 5 performance + 6 efficiency cores, 36 GiB RAM**. No power/thermal/cache controls were imposed.
+
+### 13 — worker-count sweep
+
+Three fresh-process runs per setting via DOTNET_PROCESSOR_COUNT (also affects runtime thread-pool/GC processor accounting): 4 workers **7,051 ms**, 5 **5,910**, 8 **4,673**, 11 **4,140**, 16 **3,902**. Reducing parallelism loses substantially. Oversubscription shows a modest possible benefit with wide ranges; revisit after parser tuning instead of hard-coding a machine-specific worker count. No source change. Benchmark driver now also records child user/system CPU time.
