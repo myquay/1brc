@@ -25,3 +25,7 @@ Results appended with each individual change. Rejected changes are reverted and 
 ### 00 — vanilla SDK/runtime upgrade
 
 Unchanged attempt 06: .NET 10 median **3,904 ms** (3,813–4,185); .NET 11 median **3,880 ms** (3,779–4,814). Approximately 0.6% faster, within noise; no convincing performance gain from upgrade alone. Initial series overlapped a small correctness run/build, so final validation repeats this control without those activities. All outputs identical. Baselines built in isolated `/tmp/1brc-baseline-net{10,11}.0` copies with exact SDK global.json pins; only TargetFramework changed. Historical HEAD targeted net8, but the user's starting working tree already targeted net10.
+
+### 01 — correctness-first attempt 07
+
+Copied attempt 06, added full byte-name equality and dynamic table growth; fixed BOM placement, CRLF, ordinal ordering, invariant formatting and 1BRC midpoint rounding. Added `--file`/`--quiet`, default candidate 07, and independent regression fixtures. Attempt 06 unchanged. Three runs: control median **4,007 ms**, candidate **4,184 ms** (+4.4%); candidate range 4,088–4,185. All full-file station aggregates match the control (canonical hash ignores ordering). Correctness suite passes; extra name equality and capacity checks have a modest cost. Retain correctness even where it costs throughput.
