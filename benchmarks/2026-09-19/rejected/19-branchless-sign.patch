@@ -1,0 +1,13 @@
+diff --git a/1brc/Attempts/Attempt07.cs b/1brc/Attempts/Attempt07.cs
+index 01a0c2c..da677d9 100644
+--- a/1brc/Attempts/Attempt07.cs
++++ b/1brc/Attempts/Attempt07.cs
+@@ -257,7 +257,7 @@ namespace brc.Attempts
+                 var name = buffer.Slice(offset, nameLength);
+                 var position = offset + nameLength + 1;
+                 var negative = buffer[position] == sign;
+-                if (negative) position++;
++                position += negative ? 1 : 0;
+                 var value = buffer[position++] - digitOffset;
+                 if (buffer[position] != dot)
+                     value = value * 10 + buffer[position++] - digitOffset;

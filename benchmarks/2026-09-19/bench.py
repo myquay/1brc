@@ -12,7 +12,7 @@ for i in range(a.runs):
         dll,variant=target.rsplit(':',1); attempt,_,workers=variant.partition('@')
         env=os.environ.copy()
         if workers: env['DOTNET_PROCESSOR_COUNT']=workers
-        command=['dotnet',dll,attempt]
+        command=(['dotnet',dll] if dll.endswith('.dll') else [dll])+[attempt]
         if a.file: command += ['--file',a.file]
         usage=resource.getrusage(resource.RUSAGE_CHILDREN)
         start=time.perf_counter()

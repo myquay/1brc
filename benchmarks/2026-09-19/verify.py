@@ -2,6 +2,7 @@
 import os, random, subprocess, tempfile
 from pathlib import Path
 DLL=Path(__file__).resolve().parents[2]/'1brc/bin/Release/net11.0/1brc.dll'
+COMMAND=[os.environ['BRC_EXECUTABLE']] if 'BRC_EXECUTABLE' in os.environ else ['dotnet',str(DLL)]
 def verify(label, rows, ending=b'\n', bom=False, final=True):
     expected={}
     for name,value in rows:
@@ -20,7 +21,7 @@ def verify(label, rows, ending=b'\n', bom=False, final=True):
     if bom: payload=b'\xef\xbb\xbf'+payload
     with tempfile.TemporaryDirectory() as d:
         path=Path(d)/'measurements.txt';path.write_bytes(payload)
-        result=subprocess.run(['dotnet',str(DLL),'07','--file',str(path)],capture_output=True,text=True,timeout=60,check=True)
+        result=subprocess.run(COMMAND+['07','--file',str(path)],capture_output=True,text=True,timeout=60,check=True)
     got=result.stdout.split('\n\n')[0].strip()
     assert got==want,(label,got[:500],want[:500])
     print('PASS',label,len(rows),'rows',len(payload),'bytes',flush=True)

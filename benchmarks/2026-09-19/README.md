@@ -99,3 +99,7 @@ Store name length and skip SequenceEqual only when length <= 8 and both length/k
 ### 18 — reorder fields to reduce padding (rejected)
 
 Move NameLength after Count. Prior **5,602 ms**, reordered **5,721 ms**; user CPU **17.01 s → 17.03 s**, no gain. Reflection invocation of `Unsafe.SizeOf<Measurement>()` on both binaries reports **48 bytes in both layouts**: runtime GC-aware layout already avoids the suspected padding. Reverted; a useful example of checking actual layout instead of assuming source field order determines managed size.
+
+### 19 — branchless sign-position update (rejected)
+
+Replace conditional position increment with addition of a conditional 0/1. Prior **5,074 ms**, branchless **5,346 ms** (+5.4%); user CPU **17.12 s → 18.70 s** (+9.3%). Reverted. Removing a branch is not automatically faster; this changes the dependency chain in the hot loop. Full suite passes. Benchmark/verification drivers extended to support a native executable for the final AOT experiment.
