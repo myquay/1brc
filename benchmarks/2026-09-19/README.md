@@ -91,3 +91,7 @@ Skip tier-0 compilation/dynamic PGO for ParseCompleteLines. Prior **4,383 ms**, 
 ### 16 — dynamic scheduling with persistent resources (rejected)
 
 Revisit 16 ranges per worker with persistent unbuffered streams, 256 KiB buffers and tables. Prior **4,644 ms**, dynamic **4,606 ms**, only 0.8% with overlapping ranges (4,471–4,750). User CPU 17.98 s → 17.82 s. No convincing benefit for additional scheduling/range complexity; revert. This isolates the earlier dynamic experiment from its repeated FileStream buffer allocations. All fixtures pass.
+
+### 17 — exact short-name key equality
+
+Store name length and skip SequenceEqual only when length <= 8 and both length/key match. For this hash, those bits contain the complete padded name XOR length, so equality is exact; longer names still compare every byte. Prior **5,533 ms**, candidate **5,443 ms** (5,157–5,566), wall improvement inconclusive. Median user CPU **17.69 s → 17.11 s** (3.3% lower), retained pending final confirmation. All fixtures including deliberate long-name hash collisions pass. Overall wall time is drifting strongly while user CPU is relatively stable; do not compare these absolute wall times directly to early-session runs.

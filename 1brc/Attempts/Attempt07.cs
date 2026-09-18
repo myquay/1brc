@@ -12,6 +12,7 @@ namespace brc.Attempts
             public long Key { get; set; }
             public string Name { get; set; }
             public byte[] Bytes { get; set; }
+            public int NameLength { get; set; }
             public long Sum { get; set; }
             public int Min { get; set; }
             public int Max { get; set; }
@@ -33,7 +34,10 @@ namespace brc.Attempts
                 while (true)
                 {
                     ref var measurement = ref measurements[index];
-                    if (measurement.Key == key && name.SequenceEqual(measurement.Bytes))
+                    // For <= 8 bytes, Key is the complete padded word XOR length.
+                    // Equal key AND length therefore proves exact byte equality.
+                    if (measurement.Key == key && measurement.NameLength == name.Length &&
+                        (name.Length <= 8 || name.SequenceEqual(measurement.Bytes)))
                     {
                         measurement.Sum += value;
                         measurement.Min = Math.Min(measurement.Min, value);
@@ -60,7 +64,7 @@ namespace brc.Attempts
                 }
                 measurements[index] = new Measurement
                 {
-                    Key = key, Bytes = name.ToArray(), Name = Encoding.UTF8.GetString(name),
+                    Key = key, Bytes = name.ToArray(), Name = Encoding.UTF8.GetString(name), NameLength = name.Length,
                     Sum = value, Min = value, Max = value, Count = 1
                 };
                 count++;
