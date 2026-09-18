@@ -127,3 +127,7 @@ Prior wall **4,594 ms**, candidate **4,641 ms** (no wall gain), but user CPU **1
 ### 25 — 16,384 initial table slots (rejected)
 
 Prior **4,481 ms**, candidate **4,626 ms**; user CPU **14.61 s → 14.47 s**, only 1% with overlapping samples, while table memory doubles again. Marginal probe reduction does not establish a worthwhile overall gain. Revert to 8,192. The table-size search has reached diminishing returns. Static probe analysis is reproducible with `analyze-probes.py`.
+
+### 26 — intermediate 1 MiB buffers (rejected)
+
+Fill the gap between the previously tested 256 KiB and 4 MiB sizes. Prior median **3,195 ms**, 1 MiB **3,826 ms**. Host conditions changed markedly during this batch (256 KiB ranged 2,973–4,593), so the wall-time percentage is not a precise estimate. However, system CPU rose from median **2.38 s to 3.43 s**, and two of three paired wall comparisons favored 256 KiB. No reason to adopt larger buffers; revert. This completes the practical parser/table/JIT/I/O/scheduling experiments; proceed with clean final validation of 8,192 slots and 256 KiB buffers.
