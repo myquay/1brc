@@ -87,3 +87,7 @@ Test the .NET 11 ARM64 comparison-mask/first-match improvements with a 16-byte p
 ### 15 — AggressiveOptimization parser (rejected)
 
 Skip tier-0 compilation/dynamic PGO for ParseCompleteLines. Prior **4,383 ms**, candidate **4,631 ms** (+5.7%); median user CPU **17.71 s → 17.96 s**. No demonstrated benefit; revert attribute and retain default .NET 11 tiering/PGO. Full suite passes.
+
+### 16 — dynamic scheduling with persistent resources (rejected)
+
+Revisit 16 ranges per worker with persistent unbuffered streams, 256 KiB buffers and tables. Prior **4,644 ms**, dynamic **4,606 ms**, only 0.8% with overlapping ranges (4,471–4,750). User CPU 17.98 s → 17.82 s. No convincing benefit for additional scheduling/range complexity; revert. This isolates the earlier dynamic experiment from its repeated FileStream buffer allocations. All fixtures pass.
