@@ -47,3 +47,7 @@ Find the last complete newline once per buffer; each row searches only for its s
 ### 05 — word-sized full-name hashing
 
 Replace seven scalar byte shifts with 8-/4-byte little-endian reads and rotate/xor over the whole name. Full-name equality remains mandatory. Prior **3,920 ms**, candidate **3,852 ms** (3,834–3,936): small 1.7% median gain with overlap. Retain for full-name hash distribution as well as the observed gain. All fixtures/full-file aggregates pass.
+
+### 06 — dynamic work distribution (rejected)
+
+Sixteen ranges per worker, claimed via Interlocked.Increment, reusing each worker's table and buffer. Prior median **3,705 ms**, dynamic **3,893 ms** (+5.1%, range 3,805–4,005). More file opens and partial reads/internal FileStream buffers may offset load balancing. Reverted; exact experimental diff in `rejected/06-dynamic-ranges.patch`. Full-file oracle matches exactly: **1,001,000,000 rows, 413 stations** (the file is slightly larger than one billion rows). Added sum-overflow and shared-head/tail tests. Independent oracle source and result checksum retained.

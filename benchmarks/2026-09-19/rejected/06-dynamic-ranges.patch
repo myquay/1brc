@@ -1,0 +1,56 @@
+diff --git a/1brc/Attempts/Attempt07.cs b/1brc/Attempts/Attempt07.cs
+index f3733e9..43fc4ab 100644
+--- a/1brc/Attempts/Attempt07.cs
++++ b/1brc/Attempts/Attempt07.cs
+@@ -124,14 +124,25 @@ namespace brc.Attempts
+         {
+             var file = new FileInfo(Options.File);
+             var workerCount = Math.Min(Environment.ProcessorCount, Math.Max(1, (int)(file.Length / (1024 * 1024))));
+-            var ranges = CreateRanges(file, workerCount);
++            var ranges = CreateRanges(file, Math.Min(workerCount * 16, Math.Max(1, (int)(file.Length / (1024 * 1024)))));
++            var nextRange = -1;
+ 
+-            var tasks = new Task<MeasurementTable>[ranges.Length];
++            var tasks = new Task<MeasurementTable>[workerCount];
+ 
+-            for (int i = 0; i < ranges.Length; i++)
++            for (int i = 0; i < tasks.Length; i++)
+             {
+-                var range = ranges[i];
+-                tasks[i] = Task.Run(() => ReadRange(file.FullName, range.Start, range.End));
++                tasks[i] = Task.Run(() =>
++                {
++                    var table = new MeasurementTable();
++                    var buffer = new byte[4 * 1024 * 1024];
++                    int index;
++                    while ((index = Interlocked.Increment(ref nextRange)) < ranges.Length)
++                    {
++                        var range = ranges[index];
++                        ReadRange(file.FullName, range.Start, range.End, table, buffer);
++                    }
++                    return table;
++                });
+             }
+ 
+             var workerResults = await Task.WhenAll(tasks);
+@@ -198,11 +209,9 @@ namespace brc.Attempts
+             return reader.Length - 1;
+         }
+ 
+-        private static MeasurementTable ReadRange(string fileName, long start, long end)
++        private static void ReadRange(string fileName, long start, long end, MeasurementTable data, byte[] buffer)
+         {
+             const int bufferSize = 1024 * 1024 * 4;
+-            var data = new MeasurementTable();
+-            var buffer = new byte[bufferSize];
+             var carry = 0;
+             var position = start;
+ 
+@@ -234,7 +243,6 @@ namespace brc.Attempts
+             if (carry > 0)
+                 ParseFinalLine(buffer.AsSpan(0, carry), data);
+ 
+-            return data;
+         }
+ 
+         private static int ParseCompleteLines(ReadOnlySpan<byte> buffer, MeasurementTable data)

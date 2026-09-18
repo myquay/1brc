@@ -40,3 +40,5 @@ verify('buffer-boundaries',[(r.choice(names),r.randrange(-999,1000)) for _ in ra
 if old is None: del os.environ['DOTNET_PROCESSOR_COUNT']
 else: os.environ['DOTNET_PROCESSOR_COUNT']=old
 verify('worker-boundaries',[(r.choice(names),r.randrange(-999,1000)) for _ in range(120000)],ending=b'\r\n',final=False)
+verify('64-bit-sum',[('hot',999)]*2200000)
+verify('shared-head-and-tail',[(f'abcdefgh{i:05}abcdefgh',i%1999-999) for i in range(10000)])
