@@ -119,3 +119,7 @@ Keep CLR processor accounting unchanged; only double Attempt07's static partitio
 ### 23 — 4,096 initial table slots
 
 Reduce steady-state probe collisions by increasing initial capacity from 1,024 to 4,096. Prior **4,696 ms**, candidate **4,671 ms**, wall time effectively tied under host noise/I/O. Median user CPU **17.11 s → 14.69 s**, **14.1% less CPU work** across all three observations (candidate 14.66–14.74). Retain this clear CPU improvement; initial table storage rises from 48 KiB to 192 KiB per worker, still small beside the original buffers. Growth remains supported. All fixtures/full-file comparison pass. Check a further size increase before stopping.
+
+### 24 — 8,192 initial table slots
+
+Prior wall **4,594 ms**, candidate **4,641 ms** (no wall gain), but user CPU **14.89 s → 14.38 s** (3.4% lower, non-overlapping CPU observations). Retain for lower CPU work. Table is 384 KiB per worker. A static probe model using the generator's 413 names in generator order predicts average successful probes of 1.334 / 1.119 / 1.046 / 1.017 / 1.012 for capacities 1,024 / 2,048 / 4,096 / 8,192 / 16,384 (`probe-analysis.json`). This is a model, not instrumentation of runtime insertion order; no dataset names are embedded in the candidate. Further capacity gains should be marginal; test 16,384 to locate the plateau.

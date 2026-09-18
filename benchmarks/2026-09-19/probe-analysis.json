@@ -1,0 +1,38 @@
+[
+  {
+    "capacity": 1024,
+    "stations": 413,
+    "average_successful_probes": 1.334140435835351,
+    "maximum_probes": 8
+  },
+  {
+    "capacity": 2048,
+    "stations": 413,
+    "average_successful_probes": 1.11864406779661,
+    "maximum_probes": 5
+  },
+  {
+    "capacity": 4096,
+    "stations": 413,
+    "average_successful_probes": 1.0460048426150121,
+    "maximum_probes": 4
+  },
+  {
+    "capacity": 8192,
+    "stations": 413,
+    "average_successful_probes": 1.0169491525423728,
+    "maximum_probes": 2
+  },
+  {
+    "capacity": 16384,
+    "stations": 413,
+    "average_successful_probes": 1.0121065375302662,
+    "maximum_probes": 2
+  },
+  {
+    "capacity": 32768,
+    "stations": 413,
+    "average_successful_probes": 1.0072639225181599,
+    "maximum_probes": 2
+  }
+]

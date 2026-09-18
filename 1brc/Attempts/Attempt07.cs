@@ -21,7 +21,7 @@ namespace brc.Attempts
 
         private sealed class MeasurementTable
         {
-            private const int TableSize = 4096;
+            private const int TableSize = 8192;
             private int TableMask => measurements.Length - 1;
             private int count;
 
