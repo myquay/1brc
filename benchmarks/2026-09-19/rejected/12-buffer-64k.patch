@@ -1,0 +1,13 @@
+diff --git a/1brc/Attempts/Attempt07.cs b/1brc/Attempts/Attempt07.cs
+index 88ed0ab..4d5ca2d 100644
+--- a/1brc/Attempts/Attempt07.cs
++++ b/1brc/Attempts/Attempt07.cs
+@@ -205,7 +205,7 @@ namespace brc.Attempts
+ 
+         private static MeasurementTable ReadRange(string fileName, long start, long end)
+         {
+-            const int bufferSize = 256 * 1024;
++            const int bufferSize = 64 * 1024;
+             var data = new MeasurementTable();
+             var buffer = new byte[bufferSize];
+             var carry = 0;

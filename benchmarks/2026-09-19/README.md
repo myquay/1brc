@@ -71,3 +71,7 @@ The application already owns a 4 MiB buffer. Set FileStream buffer size to 1, av
 ### 11 — 256 KiB worker buffers
 
 Reduce buffers from 4 MiB to 256 KiB to improve locality and reduce live memory (44 MiB to 2.75 MiB for 11 workers, excluding tables/runtime). Prior **3,565 ms**, candidate **3,403 ms** (3,345–3,502), **4.5% faster**. More read calls but less cache footprint; retained. All fixtures/full-file aggregates pass.
+
+### 12 — 64 KiB buffers (rejected)
+
+Prior 256 KiB **4,134 ms**, 64 KiB **5,210 ms** (5,142–5,740), **26% slower**. Reverted; increased syscall frequency outweighs locality benefits. Both controls and candidate slowed in this series, reinforcing paired comparisons over comparisons with distant runs. Hardware confirmed: **Apple M3 Pro, 5 performance + 6 efficiency cores, 36 GiB RAM**. No power/thermal/cache controls were imposed.
