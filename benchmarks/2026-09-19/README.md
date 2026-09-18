@@ -67,3 +67,7 @@ Check existing key/name first; move growth/allocation to cold Insert and inline 
 ### 10 — disable redundant FileStream buffering
 
 The application already owns a 4 MiB buffer. Set FileStream buffer size to 1, avoiding its separate large buffer for short reads. Prior **3,551 ms**, candidate **3,540 ms** (3,538–3,550): neutral throughput, retained for lower buffering/allocation overhead. Full suite passes. A separate `dd if=measurements.txt of=/dev/null bs=4m` read took **3.101 s**, suggesting a substantial I/O floor. This is a contextual sequential-read measurement, not a strict lower bound or controlled cold-cache test. Extended benchmark driver with optional `--file` and `:07@N` processor-count overrides for subsequent experiments.
+
+### 11 — 256 KiB worker buffers
+
+Reduce buffers from 4 MiB to 256 KiB to improve locality and reduce live memory (44 MiB to 2.75 MiB for 11 workers, excluding tables/runtime). Prior **3,565 ms**, candidate **3,403 ms** (3,345–3,502), **4.5% faster**. More read calls but less cache footprint; retained. All fixtures/full-file aggregates pass.

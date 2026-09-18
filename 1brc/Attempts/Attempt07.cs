@@ -205,7 +205,7 @@ namespace brc.Attempts
 
         private static MeasurementTable ReadRange(string fileName, long start, long end)
         {
-            const int bufferSize = 1024 * 1024 * 4;
+            const int bufferSize = 256 * 1024;
             var data = new MeasurementTable();
             var buffer = new byte[bufferSize];
             var carry = 0;
