@@ -26,39 +26,44 @@ namespace brc.Attempts
 
             private Measurement[] measurements = new Measurement[TableSize];
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Add(ReadOnlySpan<byte> name, long key, int value)
             {
-                if (count * 2 >= measurements.Length) Grow();
                 var index = Index(key);
-
                 while (true)
                 {
                     ref var measurement = ref measurements[index];
-
-                    if (measurement.Count == 0)
-                    {
-                        count++;
-                        measurement.Bytes = name.ToArray();
-                        measurement.Key = key;
-                        measurement.Name = Encoding.UTF8.GetString(name);
-                        measurement.Sum = value;
-                        measurement.Min = value;
-                        measurement.Max = value;
-                        measurement.Count = 1;
-                        return;
-                    }
-
                     if (measurement.Key == key && name.SequenceEqual(measurement.Bytes))
                     {
                         measurement.Sum += value;
-                        measurement.Min = measurement.Min < value ? measurement.Min : value;
-                        measurement.Max = measurement.Max > value ? measurement.Max : value;
+                        measurement.Min = Math.Min(measurement.Min, value);
+                        measurement.Max = Math.Max(measurement.Max, value);
                         measurement.Count++;
                         return;
                     }
-
+                    if (measurement.Count == 0)
+                    {
+                        Insert(name, key, value, index);
+                        return;
+                    }
                     index = (index + 1) & TableMask;
                 }
+            }
+
+            private void Insert(ReadOnlySpan<byte> name, long key, int value, int index)
+            {
+                if (count * 2 >= measurements.Length)
+                {
+                    Grow();
+                    Add(name, key, value);
+                    return;
+                }
+                measurements[index] = new Measurement
+                {
+                    Key = key, Bytes = name.ToArray(), Name = Encoding.UTF8.GetString(name),
+                    Sum = value, Min = value, Max = value, Count = 1
+                };
+                count++;
             }
 
             public void Add(Measurement value)

@@ -59,3 +59,7 @@ Pin one mapped view per worker; feed bounded 4 MiB spans without managed file-bu
 ### 08 — fuse delimiter detection and hashing
 
 SWAR (eight bytes per scalar word) detects `;` and hashes each loaded word in the same pass. Bounded little-endian loads, first-match trailing-zero count, scalar tail; complete byte equality handles all hash collisions. This exercises the newer JIT's bounds-check and ARM64 bit-count optimizations without architecture-specific unsafe loads. Prior **3,827 ms**, fused **3,546 ms** (3,544–3,569): **7.3% faster**, non-overlapping ranges. All fixtures/full-file aggregates pass. Added deliberate full-hash collisions and separator-lane fixtures.
+
+### 09 — separate table hit and insertion paths
+
+Check existing key/name first; move growth/allocation to cold Insert and inline the smaller hit loop. Prior **3,601 ms**, candidate **3,580 ms** (3,565–3,647), neutral within noise (0.6%). Retain for simpler hot path and to avoid per-row growth checks; do not count as established speedup. Full suite, deliberate collisions and full-file comparison pass.
