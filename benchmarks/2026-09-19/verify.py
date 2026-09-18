@@ -48,3 +48,8 @@ verify('full-hash-collision',[('abcdefghA',-999),('`bcdefgha',999),('abcdefghA',
 # Exercise every separator lane and the scalar (< 8 remaining bytes) scanner tail.
 for length in range(1,33):
     verify(f'name-length-{length}', [('x'*length,12),('x'*length,-34)],final=length%2==0)
+verify('zero-key-and-length',[('\x01',999),('\x01',-999),('\x02\x00',123),('A',1),('@\x00',-1)])
+original_locale=os.environ.get('LANG'); os.environ['LANG']='fr_FR.UTF-8'
+verify('culture-invariant',[('Z',-10),('Å',12),('a',3),('Z',11)])
+if original_locale is None: del os.environ['LANG']
+else: os.environ['LANG']=original_locale

@@ -1,0 +1,13 @@
+diff --git a/1brc/Attempts/Attempt07.cs b/1brc/Attempts/Attempt07.cs
+index 01a0c2c..39a787c 100644
+--- a/1brc/Attempts/Attempt07.cs
++++ b/1brc/Attempts/Attempt07.cs
+@@ -132,7 +132,7 @@ namespace brc.Attempts
+         public async Task Solve()
+         {
+             var file = new FileInfo(Options.File);
+-            var workerCount = Math.Min(Environment.ProcessorCount, Math.Max(1, (int)(file.Length / (1024 * 1024))));
++            var workerCount = Math.Min(Environment.ProcessorCount * 2, Math.Max(1, (int)(file.Length / (1024 * 1024))));
+             var ranges = CreateRanges(file, workerCount);
+ 
+             var tasks = new Task<MeasurementTable>[ranges.Length];

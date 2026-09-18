@@ -111,3 +111,7 @@ Isolated publish of the same candidate with `dotnet publish -c Release -r osx-ar
 ### 21 — oversubscription follow-up
 
 Same source with process-wide DOTNET_PROCESSOR_COUNT: 11 **5,341 ms**, 16 **5,277**, 22 **4,852**, 32 **4,962**. CPU/system cost rises at higher counts; 22 looks potentially useful despite overlapping ranges. Because the environment variable also changes CLR processor accounting, test a source-only 2× partition count next before adopting it. No global runtime configuration changed.
+
+### 22 — twice as many source-level partitions (rejected)
+
+Keep CLR processor accounting unchanged; only double Attempt07's static partitions/tasks. Five runs: prior **4,910 ms** (4,641–5,011), double **4,858 ms** (4,585–5,130). Just 1.1% with overlapping ranges and nearly identical CPU work. The process-wide override's apparent gain does not translate into a convincing source-level improvement. Revert and retain one partition per reported processor. Added zero-key/cross-length collision and non-English-culture output fixtures.
