@@ -237,98 +237,32 @@ namespace brc.Attempts
         private static int ParseCompleteLines(ReadOnlySpan<byte> buffer, MeasurementTable data)
         {
             var offset = 0;
-
-            var lineStart = offset;
-            var nameStart = offset;
-            var nameLength = 0;
-            var keyBytes = 0L;
-            var value = 0;
-            var negative = false;
-            var readingName = true;
-
-            for (int i = offset; i < buffer.Length; i++)
+            while (offset < buffer.Length)
             {
-                var current = buffer[i];
-
-                if (readingName)
-                {
-                    if (current == seperator)
-                    {
-                        readingName = false;
-                        nameLength = i - nameStart;
-                        continue;
-                    }
-
-                    var keyIndex = i - nameStart;
-                    if (keyIndex < 7)
-                        keyBytes |= (long)current << (48 - (keyIndex * 8));
-
-                    continue;
-                }
-
-                if (current == newLine)
-                {
-                    var key = ((long)nameLength << 56) | keyBytes;
-                    data.Add(buffer.Slice(nameStart, nameLength), key, negative ? -value : value);
-
-                    lineStart = i + 1;
-                    nameStart = lineStart;
-                    nameLength = 0;
-                    keyBytes = 0;
-                    value = 0;
-                    negative = false;
-                    readingName = true;
-                    continue;
-                }
-
-                if (current == sign)
-                {
-                    negative = true;
-                    continue;
-                }
-
-                if (current != dot && current != (byte)'\r')
-                    value = (value * 10) + current - digitOffset;
+                var remaining = buffer[offset..];
+                var end = remaining.IndexOf(newLine);
+                if (end < 0) break;
+                ParseFinalLine(remaining[..end], data);
+                offset += end + 1;
             }
-
-            return lineStart;
+            return offset;
         }
 
         private static void ParseFinalLine(ReadOnlySpan<byte> line, MeasurementTable data)
         {
-            var nameLength = 0;
-            var keyBytes = 0L;
+            var nameLength = line.IndexOf(seperator);
+            if (nameLength < 1) throw new FormatException("Missing station or separator");
+            var name = line[..nameLength];
+            long keyBytes = 0;
+            for (var i = 0; i < Math.Min(7, nameLength); i++)
+                keyBytes |= (long)name[i] << (48 - i * 8);
+            var temperature = line[(nameLength + 1)..];
+            var negative = temperature[0] == sign;
             var value = 0;
-            var negative = false;
-            var readingName = true;
-
-            for (int i = 0; i < line.Length; i++)
-            {
-                var current = line[i];
-
-                if (readingName)
-                {
-                    if (current == seperator)
-                    {
-                        readingName = false;
-                        nameLength = i;
-                        continue;
-                    }
-
-                    if (i < 7)
-                        keyBytes |= (long)current << (48 - (i * 8));
-
-                    continue;
-                }
-
-                if (current == sign)
-                    negative = true;
-                else if (current != dot && current != (byte)'\r')
-                    value = (value * 10) + current - digitOffset;
-            }
-
-            var key = ((long)nameLength << 56) | keyBytes;
-            data.Add(line[..nameLength], key, negative ? -value : value);
+            foreach (var current in temperature[(negative ? 1 : 0)..])
+                if (current != dot && current != (byte)'\r')
+                    value = value * 10 + current - digitOffset;
+            data.Add(name, ((long)nameLength << 56) | keyBytes, negative ? -value : value);
         }
 
         private static MeasurementTable MergeResults(MeasurementTable[] workerResults)

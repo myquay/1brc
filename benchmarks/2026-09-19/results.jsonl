@@ -14,3 +14,9 @@
 {"label": "correct-table", "iteration": 1, "target": "1brc/bin/Release/net11.0/1brc.dll:06", "solve_ms": 3884, "wall_s": 3.9076343749984517, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
 {"label": "correct-table", "iteration": 2, "target": "1brc/bin/Release/net11.0/1brc.dll:06", "solve_ms": 4205, "wall_s": 4.229001625004457, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
 {"label": "correct-table", "iteration": 2, "target": "1brc/bin/Release/net11.0/1brc.dll:07", "solve_ms": 4088, "wall_s": 4.113616374997946, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "span-delimiters", "iteration": 0, "target": "/tmp/1brc-07-correct/1brc.dll:07", "solve_ms": 4269, "wall_s": 4.291953415995522, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "span-delimiters", "iteration": 0, "target": "1brc/bin/Release/net11.0/1brc.dll:07", "solve_ms": 4151, "wall_s": 4.177964458001952, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "span-delimiters", "iteration": 1, "target": "1brc/bin/Release/net11.0/1brc.dll:07", "solve_ms": 4124, "wall_s": 4.147051791995182, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "span-delimiters", "iteration": 1, "target": "/tmp/1brc-07-correct/1brc.dll:07", "solve_ms": 4088, "wall_s": 4.113052582993987, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "span-delimiters", "iteration": 2, "target": "/tmp/1brc-07-correct/1brc.dll:07", "solve_ms": 4170, "wall_s": 4.194119332998525, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "span-delimiters", "iteration": 2, "target": "1brc/bin/Release/net11.0/1brc.dll:07", "solve_ms": 4341, "wall_s": 4.366654500001459, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}

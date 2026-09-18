@@ -29,3 +29,9 @@ Unchanged attempt 06: .NET 10 median **3,904 ms** (3,813–4,185); .NET 11 media
 ### 01 — correctness-first attempt 07
 
 Copied attempt 06, added full byte-name equality and dynamic table growth; fixed BOM placement, CRLF, ordinal ordering, invariant formatting and 1BRC midpoint rounding. Added `--file`/`--quiet`, default candidate 07, and independent regression fixtures. Attempt 06 unchanged. Three runs: control median **4,007 ms**, candidate **4,184 ms** (+4.4%); candidate range 4,088–4,185. All full-file station aggregates match the control (canonical hash ignores ordering). Correctness suite passes; extra name equality and capacity checks have a modest cost. Retain correctness even where it costs throughput.
+
+### 02 — span delimiter scanning
+
+EventPipe sampled-thread-time profile (`profile-before.log`) attributes 59.28% exclusive samples to ParseCompleteLines, 15.94% to PRead, 23.65% to waits. These are sampled thread-time percentages, **not hardware CPU samples**. Inlining may charge table work to the parser. Collected via `.tools/dotnet-trace collect --profile dotnet-sampled-thread-time -o /tmp/attempt07-before.nettrace -- dotnet 1brc/bin/Release/net11.0/1brc.dll 07`; diagnostic sockets require sandbox escalation. Raw traces kept in /tmp, report retained.
+
+Replace per-byte parser state with span IndexOf for newline/separator and one shared line parser. Prior median **4,170 ms**, new **4,151 ms** (4,124–4,341): neutral within noise. Retain as a simpler foundation (removes duplicate parsing logic and 72 lines), not as a claimed performance win. All oracle fixtures and full-file aggregates pass.
