@@ -123,3 +123,7 @@ Reduce steady-state probe collisions by increasing initial capacity from 1,024 t
 ### 24 — 8,192 initial table slots
 
 Prior wall **4,594 ms**, candidate **4,641 ms** (no wall gain), but user CPU **14.89 s → 14.38 s** (3.4% lower, non-overlapping CPU observations). Retain for lower CPU work. Table is 384 KiB per worker. A static probe model using the generator's 413 names in generator order predicts average successful probes of 1.334 / 1.119 / 1.046 / 1.017 / 1.012 for capacities 1,024 / 2,048 / 4,096 / 8,192 / 16,384 (`probe-analysis.json`). This is a model, not instrumentation of runtime insertion order; no dataset names are embedded in the candidate. Further capacity gains should be marginal; test 16,384 to locate the plateau.
+
+### 25 — 16,384 initial table slots (rejected)
+
+Prior **4,481 ms**, candidate **4,626 ms**; user CPU **14.61 s → 14.47 s**, only 1% with overlapping samples, while table memory doubles again. Marginal probe reduction does not establish a worthwhile overall gain. Revert to 8,192. The table-size search has reached diminishing returns. Static probe analysis is reproducible with `analyze-probes.py`.

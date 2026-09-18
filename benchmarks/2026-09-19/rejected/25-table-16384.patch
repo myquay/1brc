@@ -1,0 +1,13 @@
+diff --git a/1brc/Attempts/Attempt07.cs b/1brc/Attempts/Attempt07.cs
+index 2a4be23..c8dc248 100644
+--- a/1brc/Attempts/Attempt07.cs
++++ b/1brc/Attempts/Attempt07.cs
+@@ -21,7 +21,7 @@ namespace brc.Attempts
+ 
+         private sealed class MeasurementTable
+         {
+-            private const int TableSize = 8192;
++            private const int TableSize = 16384;
+             private int TableMask => measurements.Length - 1;
+             private int count;
+ 
