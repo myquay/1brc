@@ -4,7 +4,7 @@ Machine: macOS arm64. Full input: 13,809,692,168 bytes. Installed SDK/runtime ba
 
 ## Method
 
-`bench.py` starts fresh Release processes, alternates order, records Solve and wall times and canonical output hashes in `results.jsonl`. Five observations per variant unless specified. No cache flush: warm filesystem cache, startup/JIT included in Solve, build excluded. Compare medians, check ranges, rerun small effects. No simultaneous benchmark processes. Timings apply to this machine and dataset, not universal rankings.
+`bench.py` starts fresh Release processes, alternates order, records Solve and wall times and canonical output hashes in `results.jsonl`. Five observations per variant unless specified. No cache flush: repeated reads with OS-managed caching (not guaranteed cache-resident); startup/JIT inside Solve included, build excluded. Compare medians, check ranges, rerun small effects. No simultaneous benchmark processes. Timings apply to this machine and dataset, not universal rankings.
 
 Existing working-tree edits (net10 targets, argument selection, earlier benchmarks) preceded this work. The runner and application target are extended; the generator and September 6 artifacts are preserved.
 
@@ -115,3 +115,7 @@ Same source with process-wide DOTNET_PROCESSOR_COUNT: 11 **5,341 ms**, 16 **5,27
 ### 22 — twice as many source-level partitions (rejected)
 
 Keep CLR processor accounting unchanged; only double Attempt07's static partitions/tasks. Five runs: prior **4,910 ms** (4,641–5,011), double **4,858 ms** (4,585–5,130). Just 1.1% with overlapping ranges and nearly identical CPU work. The process-wide override's apparent gain does not translate into a convincing source-level improvement. Revert and retain one partition per reported processor. Added zero-key/cross-length collision and non-English-culture output fixtures.
+
+### 23 — 4,096 initial table slots
+
+Reduce steady-state probe collisions by increasing initial capacity from 1,024 to 4,096. Prior **4,696 ms**, candidate **4,671 ms**, wall time effectively tied under host noise/I/O. Median user CPU **17.11 s → 14.69 s**, **14.1% less CPU work** across all three observations (candidate 14.66–14.74). Retain this clear CPU improvement; initial table storage rises from 48 KiB to 192 KiB per worker, still small beside the original buffers. Growth remains supported. All fixtures/full-file comparison pass. Check a further size increase before stopping.

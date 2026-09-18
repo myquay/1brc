@@ -1,0 +1,21 @@
+{
+  "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O",
+  "cpu": "Apple M3 Pro",
+  "logical_processors": 11,
+  "performance_cores": 5,
+  "efficiency_cores": 6,
+  "memory_bytes": 38654705664,
+  "input_bytes": 13809692168,
+  "input_mtime_ns": 1779013102127627132,
+  "input_rows_verified": 1001000000,
+  "stations_verified": 413,
+  "dotnet_info": ".NET SDK:\n Version:           11.0.100-rc.1.26425.128\n Commit:            3551975be0\n Workload version:  11.0.100-manifests.a6e318ce\n MSBuild version:   18.11.0-1.26425.128+3551975be\n\nRuntime Environment:\n OS Name:     Mac OS X\n OS Version:  15.7\n OS Platform: Darwin\n RID:         osx-arm64\n Base Path:   /usr/local/share/dotnet/sdk/11.0.100-rc.1.26425.128\n\n.NET workloads installed:\nThere are no installed workloads to display.\nConfigured to use workload sets when installing new manifests.\nNo workload sets are installed. Run \"dotnet workload restore\" to install a workload set.\n\nHost:\n  Version:      11.0.0-rc.1.26425.128\n  Architecture: arm64\n  Commit:       3551975be0\n\n.NET SDKs installed:\n  6.0.425 [/usr/local/share/dotnet/sdk]\n  8.0.401 [/usr/local/share/dotnet/sdk]\n  8.0.425 [/usr/local/share/dotnet/sdk]\n  9.0.101 [/usr/local/share/dotnet/sdk]\n  10.0.102 [/usr/local/share/dotnet/sdk]\n  11.0.100-rc.1.26425.128 [/usr/local/share/dotnet/sdk]\n\n.NET runtimes installed:\n  Microsoft.AspNetCore.App 6.0.33 [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.8 [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.31 [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 9.0.0 [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.2 [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 11.0.0-rc.1.26425.128 [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.NETCore.App 6.0.33 [/usr/local/share/dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.8 [/usr/local/share/dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.31 [/usr/local/share/dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 9.0.0 [/usr/local/share/dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.2 [/usr/local/share/dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 11.0.0-rc.1.26425.128 [/usr/local/share/dotnet/shared/Microsoft.NETCore.App]\n\nOther architectures found:\n  x64   [/usr/local/share/dotnet/x64]\n    registered at [/etc/dotnet/install_location_x64]\n\nEnvironment variables:\n  Not set\n\nglobal.json file:\n  Not found\n\nLearn more:\n  https://aka.ms/dotnet/info\n\nDownload .NET:\n  https://aka.ms/dotnet/download\n",
+  "runtime_overrides": {
+    "DOTNET_PROCESSOR_COUNT": null,
+    "DOTNET_TieredCompilation": null,
+    "DOTNET_TieredPGO": null,
+    "DOTNET_gcServer": null
+  },
+  "cache_policy": "No cache flushing; repeated reads with OS-managed caching, not guaranteed cache-resident.",
+  "host_controls": "No CPU affinity, power, thermal or exclusive-host controls."
+}
