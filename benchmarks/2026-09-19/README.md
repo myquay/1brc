@@ -51,3 +51,7 @@ Replace seven scalar byte shifts with 8-/4-byte little-endian reads and rotate/x
 ### 06 — dynamic work distribution (rejected)
 
 Sixteen ranges per worker, claimed via Interlocked.Increment, reusing each worker's table and buffer. Prior median **3,705 ms**, dynamic **3,893 ms** (+5.1%, range 3,805–4,005). More file opens and partial reads/internal FileStream buffers may offset load balancing. Reverted; exact experimental diff in `rejected/06-dynamic-ranges.patch`. Full-file oracle matches exactly: **1,001,000,000 rows, 413 stations** (the file is slightly larger than one billion rows). Added sum-overflow and shared-head/tail tests. Independent oracle source and result checksum retained.
+
+### 07 — read-only memory mapping (rejected)
+
+Pin one mapped view per worker; feed bounded 4 MiB spans without managed file-buffer copies. Pointer lifetime protected by try/finally, EOF/BOM tests pass. Prior **3,887 ms**, mapped **12,049 ms** (10,971–12,593), a severe regression on this macOS setup. No claim about the underlying page-fault cause without native profiling. Reverted including AllowUnsafeBlocks; patch retained. Buffered reads remain preferable here.
