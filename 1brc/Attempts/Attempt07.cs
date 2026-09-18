@@ -1,4 +1,7 @@
-﻿using System.Text;
+using System.Buffers.Binary;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace brc.Attempts
 {
@@ -243,9 +246,6 @@ namespace brc.Attempts
                 var nameLength = buffer[offset..completeEnd].IndexOf(seperator);
                 if (nameLength < 1) throw new FormatException("Missing station or separator");
                 var name = buffer.Slice(offset, nameLength);
-                long keyBytes = 0;
-                for (var i = 0; i < Math.Min(7, nameLength); i++)
-                    keyBytes |= (long)name[i] << (48 - i * 8);
                 var position = offset + nameLength + 1;
                 var negative = buffer[position] == sign;
                 if (negative) position++;
@@ -256,7 +256,7 @@ namespace brc.Attempts
                 value = value * 10 + buffer[position++] - digitOffset;
                 if (buffer[position] == (byte)'\r') position++;
                 if (buffer[position] != newLine) throw new FormatException("Invalid temperature");
-                data.Add(name, ((long)nameLength << 56) | keyBytes, negative ? -value : value);
+                data.Add(name, GetKey(name), negative ? -value : value);
                 offset = position + 1;
             }
             return offset;
@@ -267,16 +267,33 @@ namespace brc.Attempts
             var nameLength = line.IndexOf(seperator);
             if (nameLength < 1) throw new FormatException("Missing station or separator");
             var name = line[..nameLength];
-            long keyBytes = 0;
-            for (var i = 0; i < Math.Min(7, nameLength); i++)
-                keyBytes |= (long)name[i] << (48 - i * 8);
             var temperature = line[(nameLength + 1)..];
             var negative = temperature[0] == sign;
             var value = 0;
             foreach (var current in temperature[(negative ? 1 : 0)..])
                 if (current != dot && current != (byte)'\r')
                     value = value * 10 + current - digitOffset;
-            data.Add(name, ((long)nameLength << 56) | keyBytes, negative ? -value : value);
+            data.Add(name, GetKey(name), negative ? -value : value);
+        }
+
+        // Hash every byte, eight at a time. Equality still checks the complete name.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static long GetKey(ReadOnlySpan<byte> name)
+        {
+            ulong hash = (uint)name.Length;
+            while (name.Length >= 8)
+            {
+                hash = BitOperations.RotateLeft(hash, 5) ^ BinaryPrimitives.ReadUInt64LittleEndian(name);
+                name = name[8..];
+            }
+            if (name.Length >= 4)
+            {
+                hash = BitOperations.RotateLeft(hash, 5) ^ BinaryPrimitives.ReadUInt32LittleEndian(name);
+                name = name[4..];
+            }
+            foreach (var value in name)
+                hash = BitOperations.RotateLeft(hash, 5) ^ value;
+            return (long)hash;
         }
 
         private static MeasurementTable MergeResults(MeasurementTable[] workerResults)

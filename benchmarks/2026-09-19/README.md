@@ -43,3 +43,7 @@ Use the high log2(capacity) bits of the multiplicative hash, so short names do n
 ### 04 — fixed-format temperature parsing
 
 Find the last complete newline once per buffer; each row searches only for its separator, then reads sign, one/two integer digits and one fractional digit directly. Preserve CRLF and scalar final-line handling. Prior median **4,079 ms**, candidate **3,841 ms** (3,825–3,846): **5.8% faster** with non-overlapping ranges. All fixtures/full-file aggregates pass. Retained.
+
+### 05 — word-sized full-name hashing
+
+Replace seven scalar byte shifts with 8-/4-byte little-endian reads and rotate/xor over the whole name. Full-name equality remains mandatory. Prior **3,920 ms**, candidate **3,852 ms** (3,834–3,936): small 1.7% median gain with overlap. Retain for full-name hash distribution as well as the observed gain. All fixtures/full-file aggregates pass.

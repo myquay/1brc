@@ -32,3 +32,9 @@
 {"label": "fixed-temperature", "iteration": 1, "target": "/tmp/1brc-07-highbits/1brc.dll:07", "solve_ms": 4083, "wall_s": 4.108118791999004, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
 {"label": "fixed-temperature", "iteration": 2, "target": "/tmp/1brc-07-highbits/1brc.dll:07", "solve_ms": 4079, "wall_s": 4.102346083003795, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
 {"label": "fixed-temperature", "iteration": 2, "target": "1brc/bin/Release/net11.0/1brc.dll:07", "solve_ms": 3825, "wall_s": 3.8506452500005253, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "word-hash", "iteration": 0, "target": "/tmp/1brc-07-fixed/1brc.dll:07", "solve_ms": 3920, "wall_s": 3.9429417080027633, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "word-hash", "iteration": 0, "target": "1brc/bin/Release/net11.0/1brc.dll:07", "solve_ms": 3852, "wall_s": 3.893623875002959, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "word-hash", "iteration": 1, "target": "1brc/bin/Release/net11.0/1brc.dll:07", "solve_ms": 3936, "wall_s": 3.960664583995822, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "word-hash", "iteration": 1, "target": "/tmp/1brc-07-fixed/1brc.dll:07", "solve_ms": 4063, "wall_s": 4.088851749998867, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "word-hash", "iteration": 2, "target": "/tmp/1brc-07-fixed/1brc.dll:07", "solve_ms": 3846, "wall_s": 3.870916624997335, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
+{"label": "word-hash", "iteration": 2, "target": "1brc/bin/Release/net11.0/1brc.dll:07", "solve_ms": 3834, "wall_s": 3.858981292003591, "sha256": "07601d2f83425a48a971ea971386e8a57cee84a3026e11b2bcda83e060537fdd"}
