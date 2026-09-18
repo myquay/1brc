@@ -1,0 +1,21 @@
+Top 20 Functions (Exclusive)                                                  Inclusive           Exclusive           
+1.  OSFileStreamStrategy.Read(value class System.Span`1<unsigned int8>)       35.24%              31.87%              
+2.  Attempt07.ReadRange(class System.String,int64,int64)                      79.37%              24.85%              
+3.  Attempt07.ParseCompleteLines(value class System.ReadOnlySpan`1<unsigne    19.27%              19.06%              
+4.  WaitSubsystem+ThreadWaitInfo.Wait(int32,bool,bool,value class LockHold    14.57%              14.57%              
+5.  LowLevelThreadBlocker.TimedWait(int32)                                    6.01%               6.01%               
+6.  CoreLib!Interop+Sys.PRead(class System.Runtime.InteropServices.SafeHan    3.35%               3.35%               
+7.  Buffer.BulkMoveWithWriteBarrier(unsigned int8&,unsigned int8&,unsigned    0.11%               0.07%               
+8.  SpanHelpers.SequenceEqual(unsigned int8&,unsigned int8&,unsigned int)     0.06%               0.06%               
+9.  Thread.PollGC()                                                           0.03%               0.03%               
+10. Attempt07+MeasurementTable.Add(value class System.ReadOnlySpan`1<unsig    0.14%               0.03%               
+11. Attempt07.ScanName(value class System.ReadOnlySpan`1<unsigned int8>,in    0.02%               0.02%               
+12. RandomAccess.ReadAtOffset(class Microsoft.Win32.SafeHandles.SafeFileHa    3.37%               0.01%               
+13. Thread.StartCore()                                                        0.01%               0.01%               
+14. Thread.<PollGC>g__PollGCWorker|71_0()                                     0%                  0%                  
+15. VoidTaskResult].GetStateMachineBox(!!0&,class System.Threading.Tasks.T    0%                  0%                  
+16. SpanHelpers.MemmoveNative(unsigned int8&,unsigned int8&,unsigned int)     0%                  0%                  
+17. CoreLib!Interop+Sys.Open(class System.String,value class OpenFlags,int    0%                  0%                  
+18. CoreLib!Interop+Sys.FLock(int,value class LockOperations)                 0%                  0%                  
+19. __Canon].ToArray()                                                        0.01%               0%                  
+20. InitHelpers.CallClassConstructor(void*,void*,class System.Exception*)     0.01%               0%                  

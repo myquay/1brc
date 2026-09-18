@@ -1,0 +1,14 @@
+/usr/local/share/dotnet/sdk/11.0.100-rc.1.26425.128/Sdks/Microsoft.NET.Sdk/targets/Microsoft.NET.RuntimeIdentifierInference.targets(385,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [/Users/michaelmckenna/source/personal/1brc/CreateMeasurements/CreateMeasurements.csproj]
+  CreateMeasurements -> /Users/michaelmckenna/source/personal/1brc/CreateMeasurements/bin/Release/net10.0/CreateMeasurements.dll
+/Users/michaelmckenna/source/personal/1brc/1brc/Attempts/Attempt01.cs(33,52): warning CS8602: Dereference of a possibly null reference. [/Users/michaelmckenna/source/personal/1brc/1brc/1brc.csproj]
+/Users/michaelmckenna/source/personal/1brc/1brc/Attempts/Attempt01.cs(29,21): warning CA2024: Do not use 'reader.EndOfStream' in an async method (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2024) [/Users/michaelmckenna/source/personal/1brc/1brc/1brc.csproj]
+  1brc -> /Users/michaelmckenna/source/personal/1brc/1brc/bin/Release/net11.0/1brc.dll
+
+Build succeeded.
+
+/Users/michaelmckenna/source/personal/1brc/1brc/Attempts/Attempt01.cs(33,52): warning CS8602: Dereference of a possibly null reference. [/Users/michaelmckenna/source/personal/1brc/1brc/1brc.csproj]
+/Users/michaelmckenna/source/personal/1brc/1brc/Attempts/Attempt01.cs(29,21): warning CA2024: Do not use 'reader.EndOfStream' in an async method (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2024) [/Users/michaelmckenna/source/personal/1brc/1brc/1brc.csproj]
+    2 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.82

@@ -1,5 +1,22 @@
 # Attempt 07 optimization journal
 
+## Final result
+
+**Attempt 07: 3.162 s median versus attempt 06's 3.862 s on .NET 11 — 18.1% less elapsed time (1.22× throughput), with 41.6% less user CPU time.** Five alternating fresh-process observations per variant, full 13.81 GB input; all outputs agree after normalizing station order.
+
+| Variant | Median Solve | Range | Median user CPU | Median total CPU |
+| --- | ---: | ---: | ---: | ---: |
+| Attempt 06, .NET 10 | 3.894 s | 3.757–4.181 s | 26.798 s | 30.575 s |
+| Attempt 06, .NET 11 | 3.862 s | 3.806–4.089 s | 26.976 s | 30.844 s |
+| Attempt 07, .NET 11 | **3.162 s** | **3.021–3.290 s** | **15.760 s** | **18.019 s** |
+
+The unchanged runtime upgrade alone is effectively neutral (0.8% median difference, overlapping ranges). The algorithm improves throughput while fixing name collisions, table capacity, BOM/CRLF handling, sorting and rounding. The final candidate uses bounded word-at-a-time scanning/hashing, fixed-format temperatures, collision-safe tables, 8,192 initial slots, and 256 KiB application buffers with FileStream internal buffering disabled. No unsafe code, dataset-specific station names, new runtime dependencies, or machine-specific CPU intrinsics are required.
+
+**Correctness:** all 47 independent fixtures pass; exact final output matches a separate decimal/string/Dictionary oracle over **1,001,000,000 rows and 413 stations**. Full solution Release rebuild succeeds with only the two pre-existing Attempt01 warnings. See [oracle evidence](oracle-result.md), [verification log](verification-final.log), [build log](build-final.log), [environment](environment.json), and [raw timings](results.jsonl).
+
+There are **27 recorded experiments (00–26)** below, each with its own commit. Rejected source variants are preserved as patches. Stopped at a practical measured plateau: larger tables, intermediate buffers, SIMD, forced JIT optimization, branchless arithmetic, dynamic scheduling and NativeAOT did not establish further worthwhile gains. This is not proof of a global optimum; wall times varied with uncontrolled host conditions. CPU reductions and the final paired comparison provide stronger evidence than comparisons between distant runs.
+
+
 Machine: macOS arm64. Full input: 13,809,692,168 bytes. Installed SDK/runtime baseline: 10.0.102 / 10.0.2; candidate: 11.0.100-rc.1.26425.128 / 11.0.0-rc.1.26425.128. .NET 11 is a release candidate.
 
 ## Method
@@ -131,3 +148,25 @@ Prior **4,481 ms**, candidate **4,626 ms**; user CPU **14.61 s → 14.47 s**, on
 ### 26 — intermediate 1 MiB buffers (rejected)
 
 Fill the gap between the previously tested 256 KiB and 4 MiB sizes. Prior median **3,195 ms**, 1 MiB **3,826 ms**. Host conditions changed markedly during this batch (256 KiB ranged 2,973–4,593), so the wall-time percentage is not a precise estimate. However, system CPU rose from median **2.38 s to 3.43 s**, and two of three paired wall comparisons favored 256 KiB. No reason to adopt larger buffers; revert. This completes the practical parser/table/JIT/I/O/scheduling experiments; proceed with clean final validation of 8,192 slots and 256 KiB buffers.
+
+## Final validation and profiling
+
+The first final-validation chain was aborted before persisting results after a solution-build retry overlapped it; none of those partial timings are in `results.jsonl`. Restored the official targeting packs required by the user's existing net10 generator, then completed a serial clean rebuild (`dotnet build 1brc.sln -c Release -m:1 -t:Rebuild --no-restore --disable-build-servers`). The 15 final observations ran only after that build and the 47-fixture verification finished. No builds, oracle runs or profilers ran concurrently with those observations. The generator target and prior benchmark artifacts remain as supplied by the user.
+
+Final EventPipe sampled-thread-time report: `profile-final.log`. Exclusive attribution: FileStream.Read 31.87%, ReadRange 24.85%, ParseCompleteLines 19.06%, PRead 3.35%, waits about 20.58%. Inlined parsing can be attributed to ReadRange, so individual method percentages are not directly comparable across JIT versions/tiering; these are not hardware CPU percentages. The profile and plain-read measurement suggest that file delivery and remaining parsing both matter. Text reports are retained; raw `.nettrace` files are in `/tmp/attempt07-{before,final}.nettrace`.
+
+## Reproduce
+
+From repository root, with the .NET 11 SDK available:
+
+```sh
+dotnet build 1brc/1brc.csproj -c Release
+python3 benchmarks/2026-09-19/verify.py
+python3 benchmarks/2026-09-19/bench.py repeat \
+  1brc/bin/Release/net11.0/1brc.dll:06 \
+  1brc/bin/Release/net11.0/1brc.dll:07 --runs 5
+```
+
+For the vanilla runtime comparison, copy the source into two isolated directories, pin SDK `10.0.102` and `11.0.100-rc.1.26425.128` using `global.json`, set only TargetFramework to `net10.0` / `net11.0`, and build Release. Pass both resulting DLL paths with `:06` to `bench.py`. Attempt06 source is unchanged from original commit `7c535fb`; no candidate features are needed for that baseline. Exact final observation summaries are in `final-summary.json`.
+
+`bench.py LABEL DLL:ID ... --runs N` also accepts `--file PATH`, native executable paths, and `:ID@N` for process-wide DOTNET_PROCESSOR_COUNT experiments (not CPU affinity). It records elapsed, user/system CPU and canonical output hashes, and checks output agreement. Always benchmark one variant at a time; keep build, verification and profiling outside the timed runs. Rejected patches correspond to the source state immediately preceding their journal commit and should be explored in isolated checkouts.

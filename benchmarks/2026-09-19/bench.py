@@ -1,6 +1,6 @@
 """Sequential alternating full-file runs; subprocess startup excluded from solve_ms.
 Usage: python3 bench.py LABEL DLL:ATTEMPT [DLL:ATTEMPT ...] --runs 5
-Each process includes JIT warmup. No cache flushing; compare warm filesystem cache.
+Each process includes JIT warmup. No cache flushing or cache-residency guarantee.
 """
 import argparse, hashlib, json, os, re, resource, statistics, subprocess, time
 from pathlib import Path

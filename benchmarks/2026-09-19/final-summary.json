@@ -1,0 +1,35 @@
+[
+  {
+    "target": "/tmp/1brc-baseline-net10.0/1brc/bin/Release/net10.0/1brc.dll:06",
+    "runs": 5,
+    "median_solve_ms": 3894,
+    "min_solve_ms": 3757,
+    "max_solve_ms": 4181,
+    "median_wall_s": 3.9307411659974605,
+    "median_user_s": 26.798001000000028,
+    "median_system_s": 3.900941,
+    "median_total_cpu_s": 30.57521500000003
+  },
+  {
+    "target": "/tmp/1brc-baseline-net11.0/1brc/bin/Release/net11.0/1brc.dll:06",
+    "runs": 5,
+    "median_solve_ms": 3862,
+    "min_solve_ms": 3806,
+    "max_solve_ms": 4089,
+    "median_wall_s": 3.8840489159993012,
+    "median_user_s": 26.976404000000002,
+    "median_system_s": 3.8941899999999983,
+    "median_total_cpu_s": 30.84375299999998
+  },
+  {
+    "target": "1brc/bin/Release/net11.0/1brc.dll:07",
+    "runs": 5,
+    "median_solve_ms": 3162,
+    "min_solve_ms": 3021,
+    "max_solve_ms": 3290,
+    "median_wall_s": 3.183582416997524,
+    "median_user_s": 15.75983500000001,
+    "median_system_s": 2.180028,
+    "median_total_cpu_s": 18.01917800000001
+  }
+]
