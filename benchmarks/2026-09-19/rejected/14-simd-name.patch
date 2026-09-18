@@ -1,0 +1,36 @@
+diff --git a/1brc/Attempts/Attempt07.cs b/1brc/Attempts/Attempt07.cs
+index 88ed0ab..e36cc89 100644
+--- a/1brc/Attempts/Attempt07.cs
++++ b/1brc/Attempts/Attempt07.cs
+@@ -1,3 +1,5 @@
++using System.Runtime.InteropServices;
++using System.Runtime.Intrinsics;
+ using System.Buffers.Binary;
+ using System.Numerics;
+ using System.Runtime.CompilerServices;
+@@ -286,6 +288,25 @@ namespace brc.Attempts
+         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+         private static int ScanName(ReadOnlySpan<byte> bytes, out long key)
+         {
++            if (Vector128.IsHardwareAccelerated && bytes.Length >= 16)
++            {
++                var vector = MemoryMarshal.Read<Vector128<byte>>(bytes);
++                var mask128 = Vector128.Equals(vector, Vector128.Create(seperator)).ExtractMostSignificantBits();
++                if (mask128 != 0)
++                {
++                    var size = BitOperations.TrailingZeroCount(mask128);
++                    var words = vector.AsUInt64();
++                    ulong prefix = size >= 8 ? words.GetElement(0) : 0;
++                    var tailSize = size & 7;
++                    if (tailSize != 0)
++                    {
++                        var tailWord = words.GetElement(size >> 3);
++                        prefix = BitOperations.RotateLeft(prefix, 5) ^ (tailWord & (ulong.MaxValue >> (64 - tailSize * 8)));
++                    }
++                    key = (long)(prefix ^ (uint)size);
++                    return size;
++                }
++            }
+             var length = 0;
+             ulong hash = 0;
+             while (bytes.Length >= 8)

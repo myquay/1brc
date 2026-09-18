@@ -79,3 +79,7 @@ Prior 256 KiB **4,134 ms**, 64 KiB **5,210 ms** (5,142–5,740), **26% slower**.
 ### 13 — worker-count sweep
 
 Three fresh-process runs per setting via DOTNET_PROCESSOR_COUNT (also affects runtime thread-pool/GC processor accounting): 4 workers **7,051 ms**, 5 **5,910**, 8 **4,673**, 11 **4,140**, 16 **3,902**. Reducing parallelism loses substantially. Oversubscription shows a modest possible benefit with wide ranges; revisit after parser tuning instead of hard-coding a machine-specific worker count. No source change. Benchmark driver now also records child user/system CPU time.
+
+### 14 — explicit Vector128 separator search (rejected)
+
+Test the .NET 11 ARM64 comparison-mask/first-match improvements with a 16-byte prefix comparison, retaining SWAR fallback. Prior **4,398 ms**, SIMD **4,720 ms** (+7.3%). Median user CPU rose from **17.79 s to 22.27 s**; additional extraction/hash branches outweighed scanning more bytes. Reverted; portable scalar SWAR remains faster here. Full suite passes. Wall-time drift was large, but CPU time also clearly worsened.
