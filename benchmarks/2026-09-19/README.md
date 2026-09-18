@@ -107,3 +107,7 @@ Replace conditional position increment with addition of a conditional 0/1. Prior
 ### 20 — .NET 11 NativeAOT (not adopted)
 
 Isolated publish of the same candidate with `dotnet publish -c Release -r osx-arm64 -p:PublishAot=true --disable-build-servers -o /tmp/1brc-aot/publish`, exact .NET 11 RC1 packages downloaded into /tmp. The emitted native executable passes all fixtures and full-file comparison. JIT median **5,396 ms**, native **5,413 ms**; user CPU **17.01 s → 17.15 s**. No throughput benefit. Publish returned exit code 1 because xcodebuild requires full Xcode (this machine has Command Line Tools), despite producing the runnable binary; this is an exploratory artifact, not a clean supported publish. Retain normal JIT deployment; no Xcode installation or repository AOT configuration added.
+
+### 21 — oversubscription follow-up
+
+Same source with process-wide DOTNET_PROCESSOR_COUNT: 11 **5,341 ms**, 16 **5,277**, 22 **4,852**, 32 **4,962**. CPU/system cost rises at higher counts; 22 looks potentially useful despite overlapping ranges. Because the environment variable also changes CLR processor accounting, test a source-only 2× partition count next before adopting it. No global runtime configuration changed.
