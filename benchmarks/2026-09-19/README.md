@@ -39,3 +39,7 @@ Replace per-byte parser state with span IndexOf for newline/separator and one sh
 ### 03 — high-bit multiplicative table indexing
 
 Use the high log2(capacity) bits of the multiplicative hash, so short names do not systematically share low-bit buckets. Prior **4,121 ms**, candidate **4,068 ms** (4,043–4,142), about 1.3% improvement but overlapping ranges. Retain improved distribution rather than claim a large win. All tests pass. Machine exposes 11 logical processors.
+
+### 04 — fixed-format temperature parsing
+
+Find the last complete newline once per buffer; each row searches only for its separator, then reads sign, one/two integer digits and one fractional digit directly. Preserve CRLF and scalar final-line handling. Prior median **4,079 ms**, candidate **3,841 ms** (3,825–3,846): **5.8% faster** with non-overlapping ranges. All fixtures/full-file aggregates pass. Retained.

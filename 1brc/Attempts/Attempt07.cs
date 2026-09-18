@@ -237,13 +237,27 @@ namespace brc.Attempts
         private static int ParseCompleteLines(ReadOnlySpan<byte> buffer, MeasurementTable data)
         {
             var offset = 0;
-            while (offset < buffer.Length)
+            var completeEnd = buffer.LastIndexOf(newLine) + 1;
+            while (offset < completeEnd)
             {
-                var remaining = buffer[offset..];
-                var end = remaining.IndexOf(newLine);
-                if (end < 0) break;
-                ParseFinalLine(remaining[..end], data);
-                offset += end + 1;
+                var nameLength = buffer[offset..completeEnd].IndexOf(seperator);
+                if (nameLength < 1) throw new FormatException("Missing station or separator");
+                var name = buffer.Slice(offset, nameLength);
+                long keyBytes = 0;
+                for (var i = 0; i < Math.Min(7, nameLength); i++)
+                    keyBytes |= (long)name[i] << (48 - i * 8);
+                var position = offset + nameLength + 1;
+                var negative = buffer[position] == sign;
+                if (negative) position++;
+                var value = buffer[position++] - digitOffset;
+                if (buffer[position] != dot)
+                    value = value * 10 + buffer[position++] - digitOffset;
+                position++; // Decimal point; input has exactly one fractional digit.
+                value = value * 10 + buffer[position++] - digitOffset;
+                if (buffer[position] == (byte)'\r') position++;
+                if (buffer[position] != newLine) throw new FormatException("Invalid temperature");
+                data.Add(name, ((long)nameLength << 56) | keyBytes, negative ? -value : value);
+                offset = position + 1;
             }
             return offset;
         }
