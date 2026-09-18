@@ -42,3 +42,8 @@ else: os.environ['DOTNET_PROCESSOR_COUNT']=old
 verify('worker-boundaries',[(r.choice(names),r.randrange(-999,1000)) for _ in range(120000)],ending=b'\r\n',final=False)
 verify('64-bit-sum',[('hot',999)]*2200000)
 verify('shared-head-and-tail',[(f'abcdefgh{i:05}abcdefgh',i%1999-999) for i in range(10000)])
+# Equal rotate/xor word hashes, distinct complete names. Hash equality must not merge them.
+verify('full-hash-collision',[('abcdefghA',-999),('`bcdefgha',999),('abcdefghA',10),('`bcdefgha',-10)])
+# Exercise every separator lane and the scalar (< 8 remaining bytes) scanner tail.
+for length in range(1,33):
+    verify(f'name-length-{length}', [('x'*length,12),('x'*length,-34)],final=length%2==0)

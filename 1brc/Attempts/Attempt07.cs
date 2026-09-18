@@ -243,7 +243,7 @@ namespace brc.Attempts
             var completeEnd = buffer.LastIndexOf(newLine) + 1;
             while (offset < completeEnd)
             {
-                var nameLength = buffer[offset..completeEnd].IndexOf(seperator);
+                var nameLength = ScanName(buffer[offset..completeEnd], out var key);
                 if (nameLength < 1) throw new FormatException("Missing station or separator");
                 var name = buffer.Slice(offset, nameLength);
                 var position = offset + nameLength + 1;
@@ -256,7 +256,7 @@ namespace brc.Attempts
                 value = value * 10 + buffer[position++] - digitOffset;
                 if (buffer[position] == (byte)'\r') position++;
                 if (buffer[position] != newLine) throw new FormatException("Invalid temperature");
-                data.Add(name, GetKey(name), negative ? -value : value);
+                data.Add(name, key, negative ? -value : value);
                 offset = position + 1;
             }
             return offset;
@@ -276,24 +276,57 @@ namespace brc.Attempts
             data.Add(name, GetKey(name), negative ? -value : value);
         }
 
-        // Hash every byte, eight at a time. Equality still checks the complete name.
+        // Detect a separator in eight bytes while hashing those same bytes.
+        // All loads are span-bounded; zero-byte detection finds the first match.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int ScanName(ReadOnlySpan<byte> bytes, out long key)
+        {
+            var length = 0;
+            ulong hash = 0;
+            while (bytes.Length >= 8)
+            {
+                var word = BinaryPrimitives.ReadUInt64LittleEndian(bytes);
+                var match = word ^ 0x3b3b3b3b3b3b3b3bUL;
+                var mask = (match - 0x0101010101010101UL) & ~match & 0x8080808080808080UL;
+                if (mask != 0)
+                {
+                    var count = BitOperations.TrailingZeroCount(mask) / 8;
+                    if (count != 0) hash = BitOperations.RotateLeft(hash, 5) ^ (word & (ulong.MaxValue >> (64 - count * 8)));
+                    length += count;
+                    key = (long)(hash ^ (uint)length);
+                    return length;
+                }
+                hash = BitOperations.RotateLeft(hash, 5) ^ word;
+                length += 8;
+                bytes = bytes[8..];
+            }
+            ulong tail = 0;
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                if (bytes[i] == seperator)
+                {
+                    if (i != 0) hash = BitOperations.RotateLeft(hash, 5) ^ tail;
+                    key = (long)(hash ^ (uint)(length + i));
+                    return length + i;
+                }
+                tail |= (ulong)bytes[i] << (i * 8);
+            }
+            throw new FormatException("Missing separator");
+        }
+
         private static long GetKey(ReadOnlySpan<byte> name)
         {
-            ulong hash = (uint)name.Length;
+            var length = name.Length;
+            ulong hash = 0;
             while (name.Length >= 8)
             {
                 hash = BitOperations.RotateLeft(hash, 5) ^ BinaryPrimitives.ReadUInt64LittleEndian(name);
                 name = name[8..];
             }
-            if (name.Length >= 4)
-            {
-                hash = BitOperations.RotateLeft(hash, 5) ^ BinaryPrimitives.ReadUInt32LittleEndian(name);
-                name = name[4..];
-            }
-            foreach (var value in name)
-                hash = BitOperations.RotateLeft(hash, 5) ^ value;
-            return (long)hash;
+            ulong tail = 0;
+            for (var i = 0; i < name.Length; i++) tail |= (ulong)name[i] << (i * 8);
+            if (name.Length != 0) hash = BitOperations.RotateLeft(hash, 5) ^ tail;
+            return (long)(hash ^ (uint)length);
         }
 
         private static MeasurementTable MergeResults(MeasurementTable[] workerResults)

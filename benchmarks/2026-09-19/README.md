@@ -55,3 +55,7 @@ Sixteen ranges per worker, claimed via Interlocked.Increment, reusing each worke
 ### 07 — read-only memory mapping (rejected)
 
 Pin one mapped view per worker; feed bounded 4 MiB spans without managed file-buffer copies. Pointer lifetime protected by try/finally, EOF/BOM tests pass. Prior **3,887 ms**, mapped **12,049 ms** (10,971–12,593), a severe regression on this macOS setup. No claim about the underlying page-fault cause without native profiling. Reverted including AllowUnsafeBlocks; patch retained. Buffered reads remain preferable here.
+
+### 08 — fuse delimiter detection and hashing
+
+SWAR (eight bytes per scalar word) detects `;` and hashes each loaded word in the same pass. Bounded little-endian loads, first-match trailing-zero count, scalar tail; complete byte equality handles all hash collisions. This exercises the newer JIT's bounds-check and ARM64 bit-count optimizations without architecture-specific unsafe loads. Prior **3,827 ms**, fused **3,546 ms** (3,544–3,569): **7.3% faster**, non-overlapping ranges. All fixtures/full-file aggregates pass. Added deliberate full-hash collisions and separator-lane fixtures.
