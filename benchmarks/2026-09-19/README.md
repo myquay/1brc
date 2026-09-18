@@ -35,3 +35,7 @@ Copied attempt 06, added full byte-name equality and dynamic table growth; fixed
 EventPipe sampled-thread-time profile (`profile-before.log`) attributes 59.28% exclusive samples to ParseCompleteLines, 15.94% to PRead, 23.65% to waits. These are sampled thread-time percentages, **not hardware CPU samples**. Inlining may charge table work to the parser. Collected via `.tools/dotnet-trace collect --profile dotnet-sampled-thread-time -o /tmp/attempt07-before.nettrace -- dotnet 1brc/bin/Release/net11.0/1brc.dll 07`; diagnostic sockets require sandbox escalation. Raw traces kept in /tmp, report retained.
 
 Replace per-byte parser state with span IndexOf for newline/separator and one shared line parser. Prior median **4,170 ms**, new **4,151 ms** (4,124–4,341): neutral within noise. Retain as a simpler foundation (removes duplicate parsing logic and 72 lines), not as a claimed performance win. All oracle fixtures and full-file aggregates pass.
+
+### 03 — high-bit multiplicative table indexing
+
+Use the high log2(capacity) bits of the multiplicative hash, so short names do not systematically share low-bit buckets. Prior **4,121 ms**, candidate **4,068 ms** (4,043–4,142), about 1.3% improvement but overlapping ranges. Retain improved distribution rather than claim a large win. All tests pass. Machine exposes 11 logical processors.

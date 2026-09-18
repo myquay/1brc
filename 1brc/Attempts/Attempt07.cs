@@ -87,7 +87,7 @@ namespace brc.Attempts
                 }
             }
 
-            private int Index(long key) => (int)(((ulong)key * 11400714819323198485ul) >> 32) & TableMask;
+            private int Index(long key) => (int)(((ulong)key * 11400714819323198485ul) >> (64 - System.Numerics.BitOperations.Log2((uint)measurements.Length))) & TableMask;
 
             private void Grow()
             {

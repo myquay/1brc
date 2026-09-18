@@ -1,0 +1,21 @@
+Top 20 Functions (Exclusive)                                                  Inclusive           Exclusive           
+1.  Attempt07.ParseCompleteLines(value class System.ReadOnlySpan`1<unsigne    59.74%              59.28%              
+2.  CoreLib!Interop+Sys.PRead(class System.Runtime.InteropServices.SafeHan    15.94%              15.94%              
+3.  WaitSubsystem+ThreadWaitInfo.Wait(int32,bool,bool,value class LockHold    14.35%              14.35%              
+4.  LowLevelThreadBlocker.TimedWait(int32)                                    9.3%                9.3%                
+5.  OSFileStreamStrategy.Read(value class System.Span`1<unsigned int8>)       2.15%               0.47%               
+6.  SpanHelpers.SequenceEqual(unsigned int8&,unsigned int8&,unsigned int)     0.44%               0.44%               
+7.  CoreLib!Interop+Sys.Open(class System.String,value class OpenFlags,int    0.05%               0.05%               
+8.  Attempt07.ReadRange(class System.String,int64,int64)                      76.24%              0.02%               
+9.  ManualResetEventSlim.Wait(int32,value class System.Threading.Cancellat    7.18%               0.02%               
+10. Thread.StartCore()                                                        0.01%               0.01%               
+11. Attempt07+MeasurementTable.Add(value class System.ReadOnlySpan`1<unsig    0.05%               0.01%               
+12. AsyncMethodBuilderCore.Start(!!0&)                                        0.03%               0.01%               
+13. VoidTaskResult].GetStateMachineBox(!!0&,class System.Threading.Tasks.T    0.01%               0.01%               
+14. SpanHelpers.Memmove(unsigned int8&,unsigned int8&,unsigned int)           0.01%               0.01%               
+15. AppContext.Setup(wchar**,wchar**,int32,class System.Exception*)           0.01%               0.01%               
+16. Attempt07.CreateRanges(class System.IO.FileInfo,int32)                    0.01%               0.01%               
+17. StaticsHelpers.GetGCThreadStaticsByIndexSlow(int32)                       0.01%               0.01%               
+18. BufferedFileStreamStrategy.Read(unsigned int8[],int32,int32)              15.5%               0.01%               
+19. CoreLib!Interop+Sys.FLock(int,value class LockOperations)                 0%                  0%                  
+20. Utf8Utility.TranscodeToUtf8(wchar*,int32,unsigned int8*,int32,wchar*&,    0%                  0%                  
