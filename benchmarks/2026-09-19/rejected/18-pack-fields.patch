@@ -1,0 +1,17 @@
+diff --git a/1brc/Attempts/Attempt07.cs b/1brc/Attempts/Attempt07.cs
+index 01a0c2c..5a2019f 100644
+--- a/1brc/Attempts/Attempt07.cs
++++ b/1brc/Attempts/Attempt07.cs
+@@ -12,11 +12,11 @@ namespace brc.Attempts
+             public long Key { get; set; }
+             public string Name { get; set; }
+             public byte[] Bytes { get; set; }
+-            public int NameLength { get; set; }
+             public long Sum { get; set; }
+             public int Min { get; set; }
+             public int Max { get; set; }
+             public int Count { get; set; }
++            public int NameLength { get; set; }
+         }
+ 
+         private sealed class MeasurementTable

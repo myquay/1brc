@@ -95,3 +95,7 @@ Revisit 16 ranges per worker with persistent unbuffered streams, 256 KiB buffers
 ### 17 — exact short-name key equality
 
 Store name length and skip SequenceEqual only when length <= 8 and both length/key match. For this hash, those bits contain the complete padded name XOR length, so equality is exact; longer names still compare every byte. Prior **5,533 ms**, candidate **5,443 ms** (5,157–5,566), wall improvement inconclusive. Median user CPU **17.69 s → 17.11 s** (3.3% lower), retained pending final confirmation. All fixtures including deliberate long-name hash collisions pass. Overall wall time is drifting strongly while user CPU is relatively stable; do not compare these absolute wall times directly to early-session runs.
+
+### 18 — reorder fields to reduce padding (rejected)
+
+Move NameLength after Count. Prior **5,602 ms**, reordered **5,721 ms**; user CPU **17.01 s → 17.03 s**, no gain. Reflection invocation of `Unsafe.SizeOf<Measurement>()` on both binaries reports **48 bytes in both layouts**: runtime GC-aware layout already avoids the suspected padding. Reverted; a useful example of checking actual layout instead of assuming source field order determines managed size.
